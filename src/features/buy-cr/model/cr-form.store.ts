@@ -1,11 +1,12 @@
 import { makeAutoObservable } from "mobx";
 import { Contract } from "@ethersproject/contracts";
-import { TOKEN_ABI, TOKEN_ADDRESS } from "../../../entities";
+import { TOKEN_ABI, TOKEN_ADDRESS, TOKEN_SYMBOLS } from "../../../entities";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { BaseTokensFormSubmitData } from "../../base-tokens-form";
-import { CR_SWAP_CONTRACT_DATA } from "../constants";
+import { TEST_SWAP_CONTRACT_DATA } from "../constants";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { SwapStatus } from "../../swap-tokens";
+import web3 from 'web3';
 
 export class CRFormStore {
   private readonly _sourceContract: Contract;
@@ -35,9 +36,10 @@ export class CRFormStore {
       _signer
     );
 
+
     this._swapContract = new Contract(
-      CR_SWAP_CONTRACT_DATA.address,
-      CR_SWAP_CONTRACT_DATA.abi,
+      TEST_SWAP_CONTRACT_DATA.address,
+      TEST_SWAP_CONTRACT_DATA.abi,
       _signer
     );
 
@@ -46,7 +48,10 @@ export class CRFormStore {
 
   private init = async () => {
     try {
-      const bigNumber = await this._swapContract.PriceomdwCR();
+      const bigNumber = await this._swapContract.myPrice(
+        this._sourceContract.address,
+        web3.utils.asciiToHex(TOKEN_SYMBOLS.OMD)
+        );
       this.exchangeRate = +formatUnits(bigNumber, "6");
     } catch (e) {
       console.log(e);
@@ -57,7 +62,6 @@ export class CRFormStore {
 
   public onSubmit = async ({ sourceAmount }: BaseTokensFormSubmitData) => {
     this.swapStatus = SwapStatus.STARTING;
-
     try {
       const decimals = await this._sourceContract.decimals();
       const unit256Amount = parseUnits(sourceAmount, decimals);
@@ -72,7 +76,10 @@ export class CRFormStore {
       await approveTransaction.wait();
 
       this.swapStatus = SwapStatus.AWAITING_CONFIRM;
-      const buyTransaction = await this._swapContract.buyToken(unit256Amount);
+      const buyTransaction = await this._swapContract.buyToken(
+        web3.utils.asciiToHex(TOKEN_SYMBOLS.OMD),
+        unit256Amount
+      );
 
       this.swapStatus = SwapStatus.AWAITING_BLOCK_MINING;
       await buyTransaction.wait();
