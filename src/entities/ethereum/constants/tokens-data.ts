@@ -7,6 +7,7 @@ import {
   CR_ABI,
 } from "./contracts-abi";
 import { isProd } from "../../../shared/config";
+import { LAUNCHPAD_ABI } from "./contracts-abi/omd-launchpad";
 
 export enum TOKEN_SYMBOLS {
   USDT = "USDT",
@@ -14,6 +15,7 @@ export enum TOKEN_SYMBOLS {
   STOMD = "stOMD",
   TIGR = "omdwTigr",
   CR = "omdwCRB",
+  OMDLAUNCHPAD = "omdlaunchpad"
 }
 
 export const TOKEN_ADDRESS: { [key in TOKEN_SYMBOLS]: string } = {
@@ -32,6 +34,9 @@ export const TOKEN_ADDRESS: { [key in TOKEN_SYMBOLS]: string } = {
   [TOKEN_SYMBOLS.CR]: isProd()
     ? "0x178825587FC1A7D5D6373221182290a7A4566a0A"
     : "0x79D31450D34cad1b2ac0bB91bA6b8B7BEaDa609f",
+  [TOKEN_SYMBOLS.OMDLAUNCHPAD]: isProd()
+    ? ""
+    : "",
 };
 
 export const TOKEN_ABI: { [key in TOKEN_SYMBOLS]: ContractInterface } = {
@@ -40,6 +45,7 @@ export const TOKEN_ABI: { [key in TOKEN_SYMBOLS]: ContractInterface } = {
   [TOKEN_SYMBOLS.STOMD]: OMDAO_STAKE_ABI,
   [TOKEN_SYMBOLS.TIGR]: TIGR_ABI,
   [TOKEN_SYMBOLS.CR]: CR_ABI,
+  [TOKEN_SYMBOLS.OMDLAUNCHPAD]: LAUNCHPAD_ABI
 };
 
 export const TOKEN_NAME: { [key in TOKEN_SYMBOLS]: string } = {
@@ -48,6 +54,7 @@ export const TOKEN_NAME: { [key in TOKEN_SYMBOLS]: string } = {
   [TOKEN_SYMBOLS.STOMD]: "OM DAO (Staked)",
   [TOKEN_SYMBOLS.TIGR]: "OM DAO Wrapped Tigr",
   [TOKEN_SYMBOLS.CR]: "OM DAO Wrapped Cross River Bank",
+  [TOKEN_SYMBOLS.OMDLAUNCHPAD]: "OM DAO Launchpad"
 };
 
 export const TOKEN_DECIMAL: { [key in TOKEN_SYMBOLS]: string } = {
@@ -56,4 +63,5 @@ export const TOKEN_DECIMAL: { [key in TOKEN_SYMBOLS]: string } = {
   [TOKEN_SYMBOLS.STOMD]: "6",
   [TOKEN_SYMBOLS.TIGR]: "6",
   [TOKEN_SYMBOLS.CR]: "6",
+  [TOKEN_SYMBOLS.OMDLAUNCHPAD]: "6",
 };
