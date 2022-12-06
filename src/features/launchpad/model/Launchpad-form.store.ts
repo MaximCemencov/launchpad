@@ -6,9 +6,10 @@ import { BaseTokensFormSubmitData } from "../../base-tokens-form";
 import { TEST_SWAP_CONTRACT_DATA } from "../constants";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { SwapStatus } from "../../swap-tokens";
-import web3 from 'web3';
+import web3 from "web3";
 
-export class OmdLaunchpadFormStore {
+
+export class LaunchpadFormStore {
   private readonly _sourceContract: Contract;
 
   private readonly _destinationContract: Contract;
@@ -21,6 +22,9 @@ export class OmdLaunchpadFormStore {
 
   private _swapStatus: SwapStatus = SwapStatus.READY;
 
+  static tokenSymbols: TOKEN_SYMBOLS = TOKEN_SYMBOLS.UN;
+
+
   constructor(private _signer: JsonRpcSigner) {
     makeAutoObservable(this);
 
@@ -31,8 +35,8 @@ export class OmdLaunchpadFormStore {
     );
 
     this._destinationContract = new Contract(
-      TOKEN_ADDRESS.omdwCRB,
-      TOKEN_ABI.omdwCRB,
+      TOKEN_ADDRESS[LaunchpadFormStore.tokenSymbols],
+      TOKEN_ABI[LaunchpadFormStore.tokenSymbols],
       _signer
     );
 
@@ -77,7 +81,7 @@ export class OmdLaunchpadFormStore {
 
       this.swapStatus = SwapStatus.AWAITING_CONFIRM;
       const buyTransaction = await this._swapContract.buyToken(
-        web3.utils.asciiToHex(TOKEN_SYMBOLS.OMD),
+        web3.utils.asciiToHex(LaunchpadFormStore.tokenSymbols),
         unit256Amount
       );
 
@@ -130,5 +134,9 @@ export class OmdLaunchpadFormStore {
 
   private set swapStatus(value: SwapStatus) {
     this._swapStatus = value;
+  }
+
+  public get symbol () {
+    return  LaunchpadFormStore.tokenSymbols
   }
 }

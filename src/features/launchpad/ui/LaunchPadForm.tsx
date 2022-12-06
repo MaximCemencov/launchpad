@@ -1,17 +1,17 @@
 import { FC, useState } from "react";
 import { BaseTokensForm } from "../../base-tokens-form";
-import { TOKEN_SYMBOLS, useEthereumStore } from "../../../entities";
+import { useEthereumStore } from "../../../entities";
 import { observer } from "mobx-react-lite";
-import { OmdLaunchpadFormStore } from "../model";
+import { LaunchpadFormStore } from "../model";
 import { SWAP_STATUS_LABELS } from "../../swap-tokens";
 import { TokenAddButton } from "../../add-token-to-metamask";
 
-export const OMDLAUNCHPADForm: FC = observer(() => {
+export const LaunchPadForm: FC = observer(() => {
   const {
     ethereumStore: { signer },
   } = useEthereumStore();
 
-  const [store] = useState(() => new OmdLaunchpadFormStore(signer));
+  const [store] = useState(() => new LaunchpadFormStore(signer));
   const {
     isLoading,
     sourceContract,
@@ -19,12 +19,14 @@ export const OMDLAUNCHPADForm: FC = observer(() => {
     onSubmit,
     calculateDestinationAmount,
     swapStatus,
+    symbol,
   } = store;
+
 
   return (
     <>
       <BaseTokensForm
-        title={`Покупка ${TOKEN_SYMBOLS.CR}`}
+        title={`Покупка ${symbol}`}
         onSubmit={onSubmit}
         sourceContract={sourceContract}
         destinationContract={destinationContract}
@@ -34,9 +36,10 @@ export const OMDLAUNCHPADForm: FC = observer(() => {
         />
       <TokenAddButton
         className="w-full"
-        text={`Добавить токен ${TOKEN_SYMBOLS.CR} в MetaMask`}
-        tokenSymbol={TOKEN_SYMBOLS.CR}
-      />
+        text={`Добавить токен ${symbol} в MetaMask`}
+        tokenSymbol={symbol}
+      >
+      </TokenAddButton>
     </>
   );
 });

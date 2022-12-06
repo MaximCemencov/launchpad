@@ -1,9 +1,9 @@
 import { FC, MouseEvent } from "react";
-import { Token } from "../../../../entities";
+import { Token, TOKEN_SYMBOLS } from "../../../../entities";
 import { Button, Panel } from "../../../../shared/ui";
 
 export interface IProjectViewProps {
-  symbol: string;
+  symbol: TOKEN_SYMBOLS;
   img: string;
   onClick: (event: MouseEvent<HTMLButtonElement>) => void;
 }
